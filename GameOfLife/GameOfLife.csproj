@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C7448AED-F0E6-429A-BD16-F5AD033B8004}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GameOfLife</RootNamespace>
+    <AssemblyName>GameOfLife</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="fnalibs\lib64\libFAudio.so.0" />
+    <None Include="fnalibs\lib64\libmojoshader.so" />
+    <None Include="fnalibs\lib64\libSDL2-2.0.so.0" />
+    <None Include="fnalibs\lib64\libSDL2_image-2.0.so.0" />
+    <None Include="fnalibs\lib64\libtheorafile.so" />
+    <None Include="fnalibs\lib\libFAudio.so.0" />
+    <None Include="fnalibs\lib\libmojoshader.so" />
+    <None Include="fnalibs\lib\libSDL2-2.0.so.0" />
+    <None Include="fnalibs\lib\libSDL2_image-2.0.so.0" />
+    <None Include="fnalibs\lib\libtheorafile.so" />
+    <None Include="fnalibs\osx\libFAudio.0.dylib" />
+    <None Include="fnalibs\osx\libmojoshader.dylib" />
+    <None Include="fnalibs\osx\libSDL2-2.0.0.dylib" />
+    <None Include="fnalibs\osx\libSDL2_image-2.0.0.dylib" />
+    <None Include="fnalibs\osx\libtheorafile.dylib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FNA">
+      <HintPath>..\..\FNATestEngine\FNA.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\map.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Life.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Content\Life.fx" />
+    <Content Include="fnalibs\README.txt" />
+    <Content Include="fnalibs\x64\FAudio.dll" />
+    <Content Include="fnalibs\x64\libtheorafile.dll" />
+    <Content Include="fnalibs\x64\MojoShader.dll" />
+    <Content Include="fnalibs\x64\SDL2.dll" />
+    <Content Include="fnalibs\x64\SDL2_image.dll" />
+    <Content Include="fnalibs\x86\FAudio.dll" />
+    <Content Include="fnalibs\x86\libtheorafile.dll" />
+    <Content Include="fnalibs\x86\MojoShader.dll" />
+    <Content Include="fnalibs\x86\SDL2.dll" />
+    <Content Include="fnalibs\x86\SDL2_image.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game1.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="RenderLayer.cs" />
+    <Compile Include="Shader.cs" />
+    <Compile Include="Utills\Camera.cs" />
+    <Compile Include="Utills\Global.cs" />
+    <Compile Include="Utills\Input.cs" />
+    <Compile Include="Utills\Resolution.cs" />
+    <Compile Include="Utills\TextureLoader.cs" />
+    <Compile Include="Utills\XmlHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y /d  "$(ProjectDir)fnalibs\x64\*.dll" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del $(ProjectDir)Content\Shaders\*.xnb
+
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.16299.0\x64\fxc.exe" /Gec /O1 /Fc /Zi /T  fx_2_0 /Fo $(ProjectDir)Content\Life.xnb $(ProjectDir)Content\Life.fx</PreBuildEvent>
+  </PropertyGroup>
+</Project>
