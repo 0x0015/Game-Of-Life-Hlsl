@@ -14,13 +14,15 @@ namespace Life
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        
+
 
         public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Vector2 screen;
         Texture2D screenTex;
         Shader life;
+
+        string filePath;
 
         int scale = 1;
         int speed = 1;
@@ -43,6 +45,19 @@ namespace Life
         /// </summary>
         protected override void Initialize()
         {
+            if (Environment.GetCommandLineArgs().Length == 1)
+            {
+                filePath = FileDialog.SelectFile();
+            }else if(Environment.GetCommandLineArgs().Length == 2)
+            {
+                filePath = Environment.GetCommandLineArgs()[1];
+            }
+            else
+            {
+                Console.WriteLine("Incorrect number of arguements :/");
+                this.Exit();
+                return;
+            }
             base.Initialize();
             Camera.Initialize();
             Global.Initialize(this);
@@ -56,7 +71,10 @@ namespace Life
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             life = new Shader(Content, "Life");
-            screenTex = TextureLoader.Load("map", Content);
+            Content.RootDirectory = "";
+            screenTex = TextureLoader.Load(filePath, Content);
+            Content.RootDirectory = "Content";
+
             Resolution.SetResolution(screenTex.Width, screenTex.Height, false);
             Resolution.SetVirtualResolution(screenTex.Width, screenTex.Height);
             //Resolution.SetVirtualResolution(map.Width, map.Height);
@@ -139,6 +157,21 @@ namespace Life
                     paused = true;
                 }
             }
+            if (Input.KeyPressed(Keys.R))
+            {
+                Content.RootDirectory = "";
+                screenTex = TextureLoader.Load(filePath, Content);
+                Content.RootDirectory = "Content";
+            }
+            if (Input.KeyPressed(Keys.N))
+            {
+                filePath = FileDialog.SelectFile();
+                Content.RootDirectory = "";
+                screenTex = TextureLoader.Load(filePath, Content);
+                Content.RootDirectory = "Content";
+                Resolution.SetResolution(screenTex.Width, screenTex.Height, false);
+                Resolution.SetVirtualResolution(screenTex.Width, screenTex.Height);
+            }
             //Console.WriteLine(Mouse.GetState().ScrollWheelValue);
             speed = (1 + (int)(Mouse.GetState().ScrollWheelValue / 800));
             base.Update(gameTime);
@@ -154,7 +187,8 @@ namespace Life
                 Resolution.SetResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, false);
                 Resolution.SetVirtualResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            bool changed = false;
+
             if (paused == false)
             {
 
@@ -164,6 +198,7 @@ namespace Life
                     for (int i = 0; i < speed; i++)
                     {
                         screenTex = life.ApplyShader(screenTex);
+                        changed = true;
                     }
                 }
                 else
@@ -172,6 +207,7 @@ namespace Life
                     if(counter >= -speed + 1)
                     {
                         screenTex = life.ApplyShader(screenTex);
+                        changed = true;
                         counter = 0;
                     }
                     else
@@ -180,10 +216,13 @@ namespace Life
                     }
                 }
             }
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
-            spriteBatch.Draw(screenTex, new Rectangle(0,0,Resolution.VirtualWidth, Resolution.VirtualHeight), Color.White);
-            spriteBatch.End();
-            
+            if (changed == true)
+            {
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
+                spriteBatch.Draw(screenTex, new Rectangle(0, 0, Resolution.VirtualWidth, Resolution.VirtualHeight), Color.White);
+                spriteBatch.End();
+            }
 
             //Draw the things FNA handles for us underneath the hood:
             base.Draw(gameTime);
