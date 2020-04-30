@@ -15,4 +15,4 @@ Space: pauses or unpauses<br>
 Mouse Scrollwheel:  increses or decreses the speed(default 60fps, so you may want to decrese)<br><br><br>
 
 To Build:<br><br>
-Just clone recursivly, and open up the sln and build or run "msbuild Life.sln".  then drop the libs(<a herf="http://fna.flibitijibibo.com/archive/fnalibs.tar.bz2">from here</a>) that are apropreate for your system into the bin folder.
+Just clone recursivly, and open up the sln and build or run "msbuild Life.sln".  then drop the libs([from here](https://fna.flibitijibibo.com/archive/fnalibs.tar.bz2 "from here")) that are apropreate for your system into the bin folder.
