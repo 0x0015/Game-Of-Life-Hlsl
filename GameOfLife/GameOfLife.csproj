@@ -55,9 +55,6 @@
     <None Include="fnalibs\osx\libtheorafile.dylib" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FNA">
-      <HintPath>..\..\FNATestEngine\FNA.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -95,15 +92,20 @@
     <Compile Include="Utills\Input.cs" />
     <Compile Include="Utills\Resolution.cs" />
     <Compile Include="Utills\TextureLoader.cs" />
-    <Compile Include="Utills\XmlHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FNA\FNA.csproj">
+      <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
+      <Name>FNA</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /d  "$(ProjectDir)fnalibs\x64\*.dll" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del $(ProjectDir)Content\Shaders\*.xnb
-
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.16299.0\x64\fxc.exe" /Gec /O1 /Fc /Zi /T  fx_2_0 /Fo $(ProjectDir)Content\Life.xnb $(ProjectDir)Content\Life.fx</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
