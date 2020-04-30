@@ -24,6 +24,8 @@ namespace Life
 
         int scale = 1;
         int speed = 1;
+        int counter = 0;
+        bool paused = false;
 
         public Game1() //This is the constructor, this function is called whenever the game class is created.
         {
@@ -68,70 +70,77 @@ namespace Life
         protected override void Update(GameTime gameTime)
         {
             Input.Update();
-            if (Input.IsKeyDown(Keys.Escape))
+            if (Input.KeyPressed(Keys.Escape))
             {
                 this.Exit();
             }
-            if (Input.IsKeyDown(Keys.NumPad1))
+            if (Input.KeyPressed(Keys.NumPad1))
             {
                 scale = 1;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad2))
+            if (Input.KeyPressed(Keys.NumPad2))
             {
                 scale = 2;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad3))
+            if (Input.KeyPressed(Keys.NumPad3))
             {
                 scale = 3;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad4))
+            if (Input.KeyPressed(Keys.NumPad4))
             {
                 scale = 4;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad5))
+            if (Input.KeyPressed(Keys.NumPad5))
             {
                 scale = 5;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad6))
+            if (Input.KeyPressed(Keys.NumPad6))
             {
                 scale = 6;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad7))
+            if (Input.KeyPressed(Keys.NumPad7))
             {
                 scale = 7;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad8))
+            if (Input.KeyPressed(Keys.NumPad8))
             {
                 scale = 8;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            if (Input.IsKeyDown(Keys.NumPad9))
+            if (Input.KeyPressed(Keys.NumPad9))
             {
                 scale = 9;
                 Resolution.SetResolution(screenTex.Width * scale, screenTex.Height * scale, false);
                 Resolution.SetVirtualResolution(screenTex.Width * scale, screenTex.Height * scale);
             }
-            //Console.WriteLine(Mouse.GetState().ScrollWheelValue);
-            speed = (1 + (int)(Mouse.GetState().ScrollWheelValue / 1000));
-            if(speed <= 0)
+            if (Input.KeyPressed(Keys.Space))
             {
-                speed = 1;
+                if (paused)
+                {
+                    paused = false;
+                }
+                else
+                {
+                    paused = true;
+                }
             }
+            //Console.WriteLine(Mouse.GetState().ScrollWheelValue);
+            speed = (1 + (int)(Mouse.GetState().ScrollWheelValue / 800));
             base.Update(gameTime);
             
         }
@@ -146,10 +155,30 @@ namespace Life
                 Resolution.SetVirtualResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            life.SetParam("screenPos", new Vector4(Camera.ScreenRect.X, Camera.ScreenRect.Y, screenTex.Width, screenTex.Height));
-            for (int i = 0; i < speed; i++)
+            if (paused == false)
             {
-                screenTex = life.ApplyShader(screenTex);
+
+                life.SetParam("screenPos", new Vector4(Camera.ScreenRect.X, Camera.ScreenRect.Y, screenTex.Width, screenTex.Height));
+                if (speed >= 1)
+                {
+                    for (int i = 0; i < speed; i++)
+                    {
+                        screenTex = life.ApplyShader(screenTex);
+                    }
+                }
+                else
+                {
+                    //Console.WriteLine(-speed + 1);
+                    if(counter >= -speed + 1)
+                    {
+                        screenTex = life.ApplyShader(screenTex);
+                        counter = 0;
+                    }
+                    else
+                    {
+                        counter++;
+                    }
+                }
             }
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null);
             spriteBatch.Draw(screenTex, new Rectangle(0,0,Resolution.VirtualWidth, Resolution.VirtualHeight), Color.White);
